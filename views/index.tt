@@ -1,5 +1,9 @@
 <div id="page">
-
+  <% IF url %>
+    <div class="container">
+      <p>Link to one time note: <a href="<% url %>"><% url %></a></p>
+    </div>
+  <% END %>
   <div class="container">
    <form action="." method='POST'>
      <div class="form-group">
