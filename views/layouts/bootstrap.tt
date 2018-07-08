@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="<% settings.charset %>">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <link rel="icon" type="image/x-icon" href="<% approot %>/images/favicon.ico">
+  <title><% title %></title>
+
+<!-- Grab jQuery from a CDN, fall back to local if necessary -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+<script type="text/javascript">/* <![CDATA[ */
+    !window.jQuery && document.write('<script type="text/javascript" src="<% request.uri_base %>/javascripts/jquery.js"><\/script>')
+/* ]]> */</script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+    <!-- <link rel="stylesheet" href="<% request.uri_base %>/css/style.css"> -->
+
+</head>
+<body>
+
+  <div id="page">
+
+
+    <div id="content" class="container">
+        <div id="header" class="page-header">
+          <div class="row">
+            <div id="header-logo" class="center-block pull-left" >
+              <img  src="<% approot %>/images/logo.jpg" height=78px />
+            </div>
+            <div id="header-text"class="pull-left">
+              <h2><% settings.friendly_name1 %></h2>
+              <h4><% settings.friendlyName2 %></h4>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <% content %>
+
+  
+
+    <footer class="page-footer font-small blue pt-4 mt-4">
+        <div class="footer-copyright text-center blue py-3">
+            Powered by <a href="http://perldancer.org/">Dancer2</a> <% dancer_version %>
+        </div>
+    </footer>
+
+  </div>
+</body>
+</html>
