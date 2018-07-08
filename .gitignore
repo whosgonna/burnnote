@@ -1,3 +1,4 @@
 *.swp
 config_local.*
+data/burnnote.db
 
