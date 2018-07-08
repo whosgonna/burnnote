@@ -10,6 +10,10 @@ use Net::IP::Match::Regexp qw( create_iprange_regexp match_ip );
 
 our $VERSION = '0.1';
 
+my $private_ip = create_iprange_regexp(
+   qw( 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 )
+);
+
 get '/' => sub {
     template 'index' => { 'title' => 'burnnote' };
 };
@@ -32,8 +36,41 @@ post '/' => sub {
 
 get '/:id' => sub {
     my $id  = route_parameters->get('id');
-    my $row = get_row($id);
-}
+    my $rec = get_rec($id);
+
+    my $params = {
+        title => 'burnnote',
+        id    => $id,
+    };
+
+
+    if (!$rec ) {
+        $params->{no_message} = $id;
+        info "mesage id $id not found";
+        return template index => $params;
+    }
+
+    my $stale = time() - (24 * 60 * 60 );
+    if ($rec->time < $stale ) {
+        $params->{stale} = $id;
+        del_rec( $id );
+        return template index => $params;
+    }
+
+    my $rmt_ip = request->address;
+
+    if ($rec->internal && !match_ip($rmt_ip, $private_ip)) {
+        info "Remote IP was external, $rmt_ip, but private IP was required";
+        $params->{external} = $rmt_ip;
+        return template index => $params;
+    }
+            
+
+    $params->{message} = $rec->message;
+    del_rec( $id );
+    template 'index' => $params;
+
+};
 
 
 sub add_message {
@@ -45,10 +82,17 @@ sub add_message {
 };
 
 
-sub get_row {
-    my $id = shift;
-    my $rs = resultset('Note')->find($id);
+sub get_rec {
+    my $id  = shift;
+    my $rec = resultset('Note')->find($id);
+    return $rec;
 }
 
+sub del_rec {
+    my $id = shift;
+    my $del = resultset('Note')->find($id)->delete;
+    p $del;
+    return $del;
+}
 
 true;

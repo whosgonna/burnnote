@@ -4,6 +4,37 @@
       <p>Link to one time note: <a href="<% url %>"><% url %></a></p>
     </div>
   <% END %>
+
+  <% IF no_message %>
+    <div class="container">
+      <p>Message with ID "<% no_message %>" not found!</p>
+    </div>
+  <% END %>
+
+  <% IF stale %>
+    <div class="container">
+      <p>Message with ID "<% no_message %>" is expired!</p>
+    </div>
+  <% END %>
+
+  <% IF message %>
+    <div class="container">
+      <p>Message:</p>
+      <p><% message %></p>
+    </div>
+  <% END %>
+
+  <% IF external %>
+    <div class="container">
+      <p>Message with ID "<% id %>" is only available to internally connected
+         computers.  You are conecting from <% external %>.</p>
+    </div>
+  <% END %>
+
+  <div class="container">
+    <h3>Create a self destructing message:</h3>
+  </div>
+
   <div class="container">
    <form action="." method='POST'>
      <div class="form-group">
@@ -19,7 +50,7 @@
      -->
 
      <div class="checkbox">
-       <label><input type="checkbox" name="internal" id='internal' checked>Internal Only</label>
+       <label><input type="checkbox" name="internal" id='internal'>Internal Only</label>
      </div>
      <button type="submit" class="btn btn-default">Submit</button>
    </form> 
