@@ -1,44 +1,43 @@
 <div id="page">
   <% IF url %>
-    <div class="container">
-      <p>Link to one time note: <a href="<% url %>"><% url %></a></p>
+    <label for="link">Link to one time note:</label>
+    <div id='link' name='link' class="alert alert-success">
+      <a href="<% url %>" class="alert-link"><% url %></a>
     </div>
   <% END %>
 
   <% IF no_message %>
-    <div class="container">
+    <div class="alert alert-danger">
       <p>Message with ID "<% no_message %>" not found!</p>
     </div>
   <% END %>
 
   <% IF stale %>
-    <div class="container">
+    <div class="alert alert-danger">
       <p>Message with ID "<% no_message %>" is expired!</p>
     </div>
   <% END %>
 
   <% IF message %>
-    <div class="container">
-      <p>Message:</p>
-      <p><% message %></p>
-    </div>
+      <label for='message_display'>Message:</label>
+      <div class="alert alert-info" id='message_display' >
+        <p><% message %></p>
+      </div>
   <% END %>
 
   <% IF external %>
-    <div class="container">
+    <div class="alert alert-danger">
       <p>Message with ID "<% id %>" is only available to internally connected
          computers.  You are conecting from <% external %>.</p>
     </div>
   <% END %>
 
-  <div class="container">
-    <h3>Create a self destructing message:</h3>
-  </div>
 
-  <div class="container">
+
+
    <form action="." method='POST'>
      <div class="form-group">
-       <label for="message">Message:</label>
+       <label for="message">Create a self destructing message:</label>
        <textarea class="form-control" id="message" placeholder="Enter one time use message here" name="message" ></textarea>
      </div>
 
@@ -50,10 +49,14 @@
      -->
 
      <div class="checkbox">
-       <label><input type="checkbox" name="internal" id='internal'>Internal Only</label>
+       <label><input type="checkbox" 
+                     name="internal" 
+                     id='internal' 
+                     <% IF settings.default_local %>
+                       checked
+                     <% END %> >Internal Only</label>
      </div>
      <button type="submit" class="btn btn-default">Submit</button>
    </form> 
-  </div>
 
 </div>

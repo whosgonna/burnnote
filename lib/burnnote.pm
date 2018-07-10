@@ -91,7 +91,6 @@ sub get_rec {
 sub del_rec {
     my $id = shift;
     my $del = resultset('Note')->find($id)->delete;
-    p $del;
     return $del;
 }
 

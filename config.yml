@@ -6,6 +6,8 @@
 appname: "burnnote"
 friendly_name1: Burn After Reading
 friendlyName2: Self Destructing Messages
+default_local:  1
+
 
 # The default layout to use for your application (located in
 # views/layouts/main.tt)
