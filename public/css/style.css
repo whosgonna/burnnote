@@ -12,3 +12,10 @@ body {
 #content {
     margin: 2em;
 }
+
+.message-display-pre {
+    border-style: none;
+    background-color: inherit;
+    border: 0;
+    font-size: 50px;
+}

@@ -21,7 +21,9 @@
   <% IF message %>
       <label for='message_display'>Message:</label>
       <div class="alert alert-info" id='message_display' >
-        <p><% message %></p>
+        <pre 
+            style='border-style:none; background-color:inherit; margin:0px; font-size:inherit; font-family:"Lucida Console", Monaco, monospace;'
+        ><% message %></pre>
       </div>
   <% END %>
 
@@ -38,7 +40,13 @@
    <form action="." method='POST'>
      <div class="form-group">
        <label for="message">Create a self destructing message:</label>
-       <textarea class="form-control" id="message" placeholder="Enter one time use message here" name="message" ></textarea>
+       <textarea 
+            class="form-control" 
+            id="message" 
+            placeholder="Enter one time use message here" 
+            name="message" 
+            style='font-family:"Lucida Console", Monaco, monospace;'
+       ></textarea>
      </div>
 
      <!-- 

@@ -1,10 +1,17 @@
 # configuration file for production environment
 
 # only log warning and error messsages
-log: "warning"
+log: "core"
 
 # log message to a file in logs/
 logger: "file"
+logger: "file"
+engines:
+  logger:
+    File:
+      log_dir: '/usr/home/burnnote/www/burnnote/logs'
+      file_name: burnnote.log
+
 
 # don't consider warnings critical
 warnings: 0

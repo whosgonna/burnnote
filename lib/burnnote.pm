@@ -7,15 +7,17 @@ use Data::GUID 'guid_string';
 use Net::IP::Match::Regexp qw( create_iprange_regexp match_ip );
 
 
-
 our $VERSION = '0.1';
+
+info "Starting Burn Note";
 
 my $private_ip = create_iprange_regexp(
    qw( 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 )
 );
 
 get '/' => sub {
-    template 'index' => { 'title' => 'burnnote' };
+    info "this is a request";
+    template 'index' => { 'title' => 'Burn Note' };
 };
 
 post '/' => sub {
@@ -31,7 +33,7 @@ post '/' => sub {
     
     $url .= $add->id;
 
-    template 'index' => { 'title' => 'burnnote', url => $url};
+    template 'index' => { 'title' => 'Burn Note', url => $url};
 };
 
 get '/:id' => sub {
@@ -39,7 +41,7 @@ get '/:id' => sub {
     my $rec = get_rec($id);
 
     my $params = {
-        title => 'burnnote',
+        title => 'Burn Note',
         id    => $id,
     };
 
@@ -57,7 +59,7 @@ get '/:id' => sub {
         return template index => $params;
     }
 
-    my $rmt_ip = request->address;
+    my $rmt_ip = request_header 'x-real-ip'; #request->address;
 
     if ($rec->internal && !match_ip($rmt_ip, $private_ip)) {
         info "Remote IP was external, $rmt_ip, but private IP was required";
