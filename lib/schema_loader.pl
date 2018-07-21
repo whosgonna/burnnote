@@ -7,7 +7,7 @@ make_schema_at(
     { debug => 1,
       dump_directory => './',
     },
-    [ 'dbi:SQLite:dbname=/usr/local/www/burnnote/data/burnnote.db', undef, undef,
+    [ 'dbi:SQLite:dbname=../data/burnnote.db', undef, undef,
        #{ loader_class => 'Burnnote' } # optionally
     ],
 );
