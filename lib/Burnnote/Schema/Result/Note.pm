@@ -54,6 +54,18 @@ __PACKAGE__->table("notes");
   data_type: 'text'
   is_nullable: 1
 
+=head2 use_limit
+
+  data_type: 'int'
+  default_value: 0
+  is_nullable: 1
+
+=head2 use_count
+
+  data_type: 'int'
+  default_value: 0
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -69,6 +81,10 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "password",
   { data_type => "text", is_nullable => 1 },
+  "use_limit",
+  { data_type => "int", default_value => 0, is_nullable => 1 },
+  "use_count",
+  { data_type => "int", default_value => 0, is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -84,8 +100,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2018-07-07 22:02:09
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:HaXhCsr0ZCNYIdTGLPPO7Q
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2018-07-21 16:41:23
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Y3Ju/c/KUzm4WwtfELtyJg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
