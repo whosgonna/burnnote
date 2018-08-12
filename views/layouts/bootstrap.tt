@@ -30,8 +30,7 @@
   <div id="page" class="container">
 
 
-    <div id="header" class="page-header bg-primary">
-      <div class="row">
+    <div id="header" class="page-header bg-primary row">
         <div id="header-left" class="center-block pull-left">
           <img  src="<% approot %>/images/logo.jpg"  height=78 style="margin:15px" />
         </div>
@@ -39,7 +38,6 @@
           <h2><% settings.friendly_name1 %></h2>
           <h4><% settings.friendlyName2 %></h4>
         </div>
-      </div>
     </div>
     
     <div id="content">

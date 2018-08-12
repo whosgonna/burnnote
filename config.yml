@@ -55,3 +55,15 @@ engines:
 #      cookie_name: eshop.session
 #      is_secure: 1
 #      is_http_only: 1
+
+# Available expiration times in hours.  The first option listed will be
+# the defaults. Options will list from shortest duration to longest in
+# the web form dropdown.
+expirations:
+  - 24
+  - 1
+  - 4
+  - 12
+  - 48
+
+test_val: This is a Test
