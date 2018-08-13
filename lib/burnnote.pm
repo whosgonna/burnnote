@@ -26,7 +26,7 @@ post '/' => sub {
     my $add = add_message({
         message  => body_parameters->get('message'),
         internal => ( body_parameters->get('internal') ? 1 : 0 ),
-        one_time => body_parameters->get('one_time'),
+        #one_time => body_parameters->get('one_time'),
         id       => guid_string(),
         time     => time()
     });
