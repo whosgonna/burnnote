@@ -27,7 +27,7 @@ post '/' => sub {
         message  => body_parameters->get('message'),
         internal => ( body_parameters->get('internal') ? 1 : 0 ),
         #one_time => body_parameters->get('one_time'),
-        id       => guid_string(),
+        id       => lc( guid_string() ),
         time     => time()
     });
 
