@@ -3,7 +3,7 @@ use Modern::Perl;
 use Dancer2;
 use Dancer2::Plugin::DBIC;
 use Data::Printer;
-use Data::GUID 'guid_string';
+use Data::Uniqid ( 'uniqid' );
 use Net::IP::Match::Regexp qw( create_iprange_regexp match_ip );
 
 
@@ -21,13 +21,14 @@ get '/' => sub {
 };
 
 post '/' => sub {
-    my $url = request->base;
+    my $url  = request->base;
+    my $guid = Data::GUID->new;
 
     my $add = add_message({
         message  => body_parameters->get('message'),
         internal => ( body_parameters->get('internal') ? 1 : 0 ),
         #one_time => body_parameters->get('one_time'),
-        id       => lc( guid_string() ),
+        id       => uniqid(),
         time     => time()
     });
 
