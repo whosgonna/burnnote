@@ -1,6 +1,7 @@
+<% USE infl = Lingua.EN.Inflect; %>
 <div id="page">
   <% IF url %>
-    <label for="link">Link to one time note:</label>
+    <label for="link">Link to self destructing note:</label>
     <div id='link' name='link' class="alert alert-success">
       <a href="<% url %>" class="alert-link"><% url %></a>
     </div>
@@ -18,8 +19,15 @@
     </div>
   <% END %>
 
+  <% IF read_limit %>
+    <div class="alert alert-danger">
+      <p>Message with ID "<% id %>" has exceeded maximum number of reads (<% read_limit %>).</p>
+    </div>
+  <% END %>
+
   <% IF message %>
-      <label for='message_display'>Message:</label>
+      <label for='message_display'>Message:</label> 
+        <span class='pull-right text-muted'>Can be read <% remaining %> more <% infl.PL('time', remaining) %>.</span>
       <div class="alert alert-info" id='message_display' >
         <pre 
             style='border-style:none; background-color:inherit; margin:0px; font-size:inherit; font-family:"Lucida Console", Monaco, monospace;'
@@ -56,16 +64,35 @@
      </div>
      -->
     <div class="row">
-      <div class="form-group checkbox col-sm-2">
+      <div class="form-group form-inline 
+                  col-sm-3
+                  col-lg-2" style="padding-top:6px">
         <label><input type="checkbox" 
                       name="internal" 
                       id='internal' 
                       <% IF settings.default_local %>
                         checked
-                      <% END %> >Internal Only</label>
+                      <% END %> > Internal Only</label>
       </div>
 
-      <div></div>
+
+      <div class="form-group form-inline 
+                  col-sm-9
+                  col-lg-4">
+        <label for="read_limit">Read Limit</label>
+        <select class="form-control"
+                name="read_limit"
+                id="read_limit">
+          <% FOR limit IN settings.read_limits.unique.nsort %>
+            <option value="<% limit %>"
+              <% IF limit == settings.read_limits.first %>
+                selected
+              <% END %>
+            ><% limit %></option>
+          <% END %>
+        </select>
+      </div>
+                      
 
       <!--      
       <div class="form-group checkbox col-sm-2">

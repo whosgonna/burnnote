@@ -5,11 +5,13 @@ use Dancer2::Plugin::DBIC;
 use Data::Printer;
 use Data::Uniqid ( 'uniqid' );
 use Net::IP::Match::Regexp qw( create_iprange_regexp match_ip );
+use Template::Plugin::Lingua::EN::Inflect;
 
 
 our $VERSION = '0.1';
 
 info "Starting Burn Note";
+print "\nEnvironment: " . config->{environment} . "\n\n";
 
 my $private_ip = create_iprange_regexp(
    qw( 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 )
@@ -22,11 +24,12 @@ get '/' => sub {
 
 post '/' => sub {
     my $url  = request->base;
-    my $guid = Data::GUID->new;
 
     my $add = add_message({
-        message  => body_parameters->get('message'),
-        internal => ( body_parameters->get('internal') ? 1 : 0 ),
+        message    => body_parameters->get('message'),
+        internal   => ( body_parameters->get('internal') ? 1 : 0 ),
+        read_count => ( body_parameters->get('read_count') // 0 ),
+        read_limit => ( body_parameters->get('read_limit') // 1 ),
         #one_time => body_parameters->get('one_time'),
         id       => uniqid(),
         time     => time()
@@ -57,11 +60,22 @@ get '/:id' => sub {
     my $stale = time() - (24 * 60 * 60 );
     if ($rec->time < $stale ) {
         $params->{stale} = $id;
-        del_rec( $id );
+        info "Message $id is expired";
+        clear_rec( $id );
         return template index => $params;
     }
 
-    my $rmt_ip = request_header 'x-real-ip'; #request->address;
+    if ( $rec->read_limit <= $rec->read_count ) {
+        my $read_limit = $rec->read_limit;
+        info "Message $id has reached it's read_limit ($read_limit)";
+        $params->{read_limit} = $read_limit;
+        clear_rec( $id );
+        return template index => $params;
+    }
+
+    my $rmt_ip = request_header 'x-real-ip'; # request->address;
+    $rmt_ip //= request->address;
+    info "Remote IP address is $rmt_ip";
 
     if ($rec->internal && !match_ip($rmt_ip, $private_ip)) {
         info "Remote IP was external, $rmt_ip, but private IP was required";
@@ -69,9 +83,13 @@ get '/:id' => sub {
         return template index => $params;
     }
             
-
-    $params->{message} = $rec->message;
-    del_rec( $id );
+    
+    ## If we get this far, we're displaying the message.
+    $params->{message}   = $rec->message;
+    my $inc = increment_read( $rec );
+    $params->{remaining} = $inc->read_limit > $inc->read_count 
+      ? $inc->read_limit - $inc->read_count
+      : 0 ;
     template 'index' => $params;
 
 };
@@ -85,6 +103,15 @@ sub add_message {
 
 };
 
+sub check_rec {
+    # Whereas the get_rec() method will retrieve the message body, the
+    # check_rec() method will validate that is is OK to send the message
+    # to the user.
+    my $rec = shift;
+    if ( !check_msg_count($rec) ) {
+        $rec->message(undef);
+    }
+}
 
 sub get_rec {
     my $id  = shift;
@@ -96,6 +123,40 @@ sub del_rec {
     my $id = shift;
     my $del = resultset('Note')->find($id)->delete;
     return $del;
+}
+
+sub clear_rec {
+    my $id    = shift;
+    my $clear = resultset('Note')
+      ->find($id)
+      ->update({
+          message => undef
+      });
+    return $clear;
+}
+
+
+sub increment_read {
+    my $rec = shift;
+    my $id  = $rec->id;
+    my $cnt = $rec->read_count;
+    my $inc = resultset('Note')
+      ->find($id)
+      ->update({
+        read_count => ++$cnt
+      });
+    if ( $inc->read_count >= $inc->read_limit ) {
+        return( clear_rec($id) );
+    }
+    return $inc;
+}
+
+sub check_msg_count {
+    my $rec = shift;
+    if ( $rec->read_count < $rec->read_limit ) {
+        return 1;
+    }
+    return undef;
 }
 
 true;

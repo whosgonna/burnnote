@@ -6,8 +6,20 @@
 appname: "burnnote"
 friendly_name1: Burn After Reading
 friendlyName2: Self Destructing Messages
-default_local:  1
-behind_proxy: 1
+default_local:  0
+behind_proxy: 0
+
+
+# Available options for how many times a message can be read. These will be
+# displayed in a dropdown list when creating the message.  The values will be
+# listed in order from lowest to highest, regardless of how they are ordered
+# here, however the first number in this list will be the default selection.
+read_limits:
+    - 2
+    - 1
+    - 10
+    - 5
+    #- unlimited
 
 # The default layout to use for your application (located in
 # views/layouts/main.tt)
