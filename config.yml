@@ -25,6 +25,15 @@ read_limits:
 # listed last. Use 1 and 0 for true / false (especially false).
 unlimited_reads: 1
 
+# Expiration periods available (in hours).  They will display in a dropdown 
+# list from lowest to highest, but the first value listed will be the 
+# default selected.
+expirations:
+    - 24
+    - 48
+    - 2
+    - 96
+    - 720
 
 # The default layout to use for your application (located in
 # views/layouts/main.tt)

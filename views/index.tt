@@ -81,8 +81,9 @@
      -->
     <div class="row">
       <div class="form-group form-inline 
+                  col-xs-12
                   col-sm-3
-                  col-lg-2" style="padding-top:6px">
+                  col-md-2" style="padding-top:6px">
         <label><input type="checkbox" 
                       name="internal" 
                       id='internal' 
@@ -93,8 +94,9 @@
 
 
       <div class="form-group form-inline 
-                  col-sm-9
-                  col-lg-4">
+                  col-xs-6
+                  col-sm-4
+                  col-md-3">
         <label for="read_limit">Read Limit</label>
         <select class="form-control"
                 name="read_limit"
@@ -108,6 +110,25 @@
           <% END %>
           <% IF settings.unlimited_reads %>
             <option value=''>Unlimited</option>
+          <% END %>
+        </select>
+      </div>
+
+     
+      <div class="form-group form-inline
+                  col-xs-6
+                  col-sm-4
+                  col-md-3">
+        <label for="read_limit">Exipres in: </label>
+        <select class="form-control"
+                name="expires"
+                id="expires">
+          <% FOR expiration IN settings.expirations.unique.nsort %>
+            <option value="<% expiration %>"
+              <% IF expiration == settings.expirations.first %>
+                selected
+              <% END %>
+            ><% expiration %> hours</option>
           <% END %>
         </select>
       </div>
