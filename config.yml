@@ -21,6 +21,11 @@ read_limits:
     - 5
     #- unlimited
 
+# Enable unlimted read requests within the time period.  This will always be
+# listed last. Use 1 and 0 for true / false (especially false).
+unlimited_reads: 1
+
+
 # The default layout to use for your application (located in
 # views/layouts/main.tt)
 #layout: "main"

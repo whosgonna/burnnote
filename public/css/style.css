@@ -19,3 +19,13 @@ body {
     border: 0;
     font-size: 50px;
 }
+
+.offscreen {
+    position: absolute;
+    left: -999em;
+}
+
+#copyPop {
+	display: none;
+	font-weight: bold;
+}

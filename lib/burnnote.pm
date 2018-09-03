@@ -18,7 +18,6 @@ my $private_ip = create_iprange_regexp(
 );
 
 get '/' => sub {
-    info "this is a request";
     template 'index' => { 'title' => 'Burn Note' };
 };
 
@@ -44,6 +43,10 @@ post '/' => sub {
 get '/:id' => sub {
     my $id  = route_parameters->get('id');
     my $rec = get_rec($id);
+    my $rmt_ip = request_header 'x-real-ip'; # request->address;
+    $rmt_ip //= request->address;
+    info "Remote IP address is $rmt_ip";
+
 
     my $params = {
         title => 'Burn Note',
@@ -65,7 +68,7 @@ get '/:id' => sub {
         return template index => $params;
     }
 
-    if ( $rec->read_limit <= $rec->read_count ) {
+    if ( $rec->read_limit && ($rec->read_limit <= $rec->read_count) ) {
         my $read_limit = $rec->read_limit;
         info "Message $id has reached it's read_limit ($read_limit)";
         $params->{read_limit} = $read_limit;
@@ -73,9 +76,6 @@ get '/:id' => sub {
         return template index => $params;
     }
 
-    my $rmt_ip = request_header 'x-real-ip'; # request->address;
-    $rmt_ip //= request->address;
-    info "Remote IP address is $rmt_ip";
 
     if ($rec->internal && !match_ip($rmt_ip, $private_ip)) {
         info "Remote IP was external, $rmt_ip, but private IP was required";
@@ -83,13 +83,14 @@ get '/:id' => sub {
         return template index => $params;
     }
             
-    
     ## If we get this far, we're displaying the message.
     $params->{message}   = $rec->message;
     my $inc = increment_read( $rec );
-    $params->{remaining} = $inc->read_limit > $inc->read_count 
-      ? $inc->read_limit - $inc->read_count
-      : 0 ;
+    if ( $rec->read_limit ) {
+        $params->{remaining} = $inc->read_limit > $inc->read_count 
+          ? $inc->read_limit - $inc->read_count
+          : 0 ;
+    }
     template 'index' => $params;
 
 };
@@ -145,7 +146,7 @@ sub increment_read {
       ->update({
         read_count => ++$cnt
       });
-    if ( $inc->read_count >= $inc->read_limit ) {
+    if ( $inc->read_limit && ($inc->read_count >= $inc->read_limit) ) {
         return( clear_rec($id) );
     }
     return $inc;
