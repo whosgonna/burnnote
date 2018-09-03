@@ -31,7 +31,8 @@ post '/' => sub {
         read_limit => ( body_parameters->get('read_limit') // 1 ),
         #one_time => body_parameters->get('one_time'),
         id       => uniqid(),
-        time     => time()
+        time     => time(),
+        expires  => time() + (  body_parameters->get('expires') * 3600 ),
     });
 
     
@@ -42,10 +43,11 @@ post '/' => sub {
 
 get '/:id' => sub {
     my $id  = route_parameters->get('id');
-    my $rec = get_rec($id);
     my $rmt_ip = request_header 'x-real-ip'; # request->address;
     $rmt_ip //= request->address;
-    info "Remote IP address is $rmt_ip";
+    info "Request fror message id $id from $rmt_ip";
+
+    my $rec = get_rec($id);
 
 
     my $params = {
@@ -60,8 +62,7 @@ get '/:id' => sub {
         return template index => $params;
     }
 
-    my $stale = time() - (24 * 60 * 60 );
-    if ($rec->time < $stale ) {
+    if ( time() > $rec->expires ) {
         $params->{stale} = $id;
         info "Message $id is expired";
         clear_rec( $id );

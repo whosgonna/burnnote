@@ -29,7 +29,7 @@
 
   <% IF stale %>
     <div class="alert alert-danger">
-      <p>Message with ID "<% no_message %>" is expired!</p>
+      <p>Message with ID <b><% stale %></b> is expired!</p>
     </div>
   <% END %>
 
