@@ -81,3 +81,7 @@ engines:
 #      cookie_name: eshop.session
 #      is_secure: 1
 #      is_http_only: 1
+
+plugins:
+    Ajax:
+        content_type: 'application/json'

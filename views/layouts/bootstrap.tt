@@ -20,12 +20,15 @@
 
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/sha256.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js"></script>
 
 
     <link rel="stylesheet" href="<% request.uri_base %>/css/style.css">
 
 </head>
-<body>
+<body onload="pageLoadFunction()">
 
   <div id="page" class="container">
 
@@ -71,5 +74,135 @@
           /* Alert the copied text */
           // alert("Copied the text: " + copyText.value);
       }
+      
+      function encryptMessage() {
+          var passwd  = document.forms["noteForm"]["myPass"].value;
+          var salt    = document.forms["noteForm"]["salt"].value;
+          var message = document.forms["noteForm"]["message"].value;
+          document.forms["noteForm"]["save_message"].value = message;
+          if ( passwd ) {
+              console.log("Encrypting message and password");
+              console.log("Salt: " + salt);
+              console.log("Password to encode salt: " + passwd );
+              
+
+              // Note:  Research how cryptographically secure this is...
+              var encSalt    = CryptoJS.SHA256( salt + ":" + passwd );
+              console.log( "encSalt: " + encSalt );
+
+              var encMessage = CryptoJS.AES.encrypt( message, passwd );
+              console.log( "encMessage: " + encMessage );
+              
+              document.forms["noteForm"]["hashed_salt"].value  = encSalt;
+              document.forms["noteForm"]["save_message"].value = encMessage;
+          }
+          document.forms["noteForm"]["message"].value = '';
+
+      }
+
+
+
+      
+      function testPass() {
+          var passwd = document.forms['decryptMsg']['msgPass'].value;
+          var msgId  = document.forms['decryptMsg']['msgId'].value;
+          var salt = $('#salt_record').val();
+
+          var data = $('#decryptMsg').serializeArray();
+          
+          console.log( 'Password is: ' + passwd );
+          console.log( 'Salt is: ' + salt );
+          console.log( 'Message Id is: ' + msgId );
+
+
+          var hashed = CryptoJS.SHA256( salt + ":" + passwd);
+          console.log('sha256 = ' + hashed );
+
+          /*
+          var decSalt = CryptoJS.AES.decrypt( hashed_salt, passwd );
+                        //document.getElementById("encSalt").innerHTML = decSalt;
+                        console.log( "decSalt: " + decSalt );
+                        console.log( "decSalt.toString(CryptoJS.enc.Utf8): " + decSalt.toString(CryptoJS.enc.Utf8) );
+          */
+          
+          var msgBody = {
+              // There's probably a better way to get this as a string.
+              hash: hashed + ''
+          };
+          
+          var result;
+          $.ajax({
+              type: 'POST',
+              url: '/' + msgId,
+              data: msgBody,
+              dataType: 'json',
+              success: function( data ) {
+                  console.log("Ajax successful");
+                  console.log("Message (enc): " + data.message );
+                  console.log("Password: " + passwd);
+
+                  if ( data.result == 'success' ) {
+                      var decMsg = CryptoJS.AES.decrypt( data.message, passwd).toString(CryptoJS.enc.Utf8);
+                      console.log( decMsg );
+                      $('#message_here').html(decMsg);
+                      $('#passwordModal').modal('hide');
+                  }
+                  else { 
+                      $('#badPass').fadeIn(); //.delay(2000).fadeOut();
+                  }
+              }
+          }); /*.done( function( data ) {
+              alert('data submitted');
+              // The encrypted message should be recieved, decrypted,
+              // Then the message box updated here.
+          });*/
+          
+          console.log( result );
+          return false;
+          
+          
+      }
+      
+      //$("#decryptMsg").ajaxForm({url: 'server.php', type: 'post'});
+
+      function pageLoadFunction() {
+          var hashElm = document.getElementById( "password_required" );
+          if ( hashElm ) {
+              console.log( "A PASSWORD IS REQUIRED HERE!" );
+              //var hashedSalt = hashElm.getAttribute( "data-hashed-salt" );
+              //var messageId  = hashElm.getAttribute( "data-message-id" );
+              
+              //console.log( "Hashed Salt: " + hashedSalt );
+              //var pass = prompt( "A password is required to view this message" );
+
+              //document.getElementById( "passwordModal" ).modal('show');
+              //$(window).on('load',function() {
+                  $('#passwordModal').modal('show');
+              //});
+
+          }
+          /*
+          if ( $('#encSalt')  ) {
+              var encSaltDiv    = $('#encSalt');
+              var encSaltDivVal = encSaltDiv.attr('value'); 
+              console.log(encSaltDivVal);
+              var decSalt = CryptoJS.AES.decrypt( encSaltDivVal, 'pass' );
+              //document.getElementById("encSalt").innerHTML = decSalt;
+              console.log( "decSalt: " + decSalt );
+              console.log( "decSalt.toString(CryptoJS.enc.Utf8): " + decSalt.toString(CryptoJS.enc.Utf8) );
+          }
+          */
+
+      }
+
+      /*
+      $(window).on('load', function() {
+          $('#passwordModal').modal('show');
+          console.log('new stylee!');
+      });
+      */
+      
+      
+      
   </script>
 </html>
