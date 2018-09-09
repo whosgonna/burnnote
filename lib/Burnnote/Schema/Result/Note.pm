@@ -61,7 +61,12 @@ __PACKAGE__->table("notes");
   default_value: null
   is_nullable: 1
 
-=head2 password
+=head2 salt
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 hashed_salt
 
   data_type: 'text'
   is_nullable: 1
@@ -83,7 +88,9 @@ __PACKAGE__->add_columns(
   { data_type => "int", default_value => 0, is_nullable => 1 },
   "read_limit",
   { data_type => "int", default_value => \"null", is_nullable => 1 },
-  "password",
+  "salt",
+  { data_type => "text", is_nullable => 1 },
+  "hashed_salt",
   { data_type => "text", is_nullable => 1 },
 );
 
@@ -100,8 +107,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2018-09-03 15:57:32
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Bizd26dNoj2Ig9EoTbTyqw
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2018-09-08 23:32:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2J4RJtmN24OdXsQkxalLUw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
