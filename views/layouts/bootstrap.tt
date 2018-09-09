@@ -34,11 +34,11 @@
 
 
     <div id="header" class="page-header bg-primary">
-      <div class="row">
-        <div id="header-left" class="center-block pull-left">
-          <img  src="<% approot %>/images/logo.jpg"  height=78 style="margin:15px" />
+      <div class="row" style="margin:0">
+        <div id="header-left" class="col-xs-12 col-sm-2 col-md-1" style="padding-left:0">
+          <img  src="<% approot %>/images/new_logo.png"  height=78 style="margin:15px 0" />
         </div>
-        <div id="header-text"class="pull-left">
+        <div id="header-text"class="col-xs-12 col-sm-10 col-md-11" style="">
           <h2><% settings.friendly_name1 %></h2>
           <h4><% settings.friendlyName2 %></h4>
         </div>
