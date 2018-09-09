@@ -29,3 +29,12 @@ body {
 	display: none;
 	font-weight: bold;
 }
+
+#badPass {
+	display: none;
+	font-weight: bold;
+	margin-bottom: 1px;
+	height: 40px;
+	line-height: 40px;
+	padding: 10px 20px;
+}

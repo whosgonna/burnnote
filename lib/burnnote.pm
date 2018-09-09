@@ -2,6 +2,7 @@ package burnnote;
 use Modern::Perl;
 use Dancer2;
 use Dancer2::Plugin::DBIC;
+use Dancer2::Plugin::Ajax;
 use Data::Printer;
 use Data::Uniqid ( 'uniqid' );
 use Net::IP::Match::Regexp qw( create_iprange_regexp match_ip );
@@ -18,27 +19,33 @@ my $private_ip = create_iprange_regexp(
 );
 
 get '/' => sub {
-    template 'index' => { 'title' => 'Burn Note' };
+    my $salt = uniqid();
+    template 'index' => { 'title' => 'Burn Note', salt => $salt };
 };
 
 post '/' => sub {
     my $url  = request->base;
+    my $salt = uniqid();
+    
+
+    my $params = body_parameters;
 
     my $add = add_message({
-        message    => body_parameters->get('message'),
-        internal   => ( body_parameters->get('internal') ? 1 : 0 ),
-        read_count => ( body_parameters->get('read_count') // 0 ),
-        read_limit => ( body_parameters->get('read_limit') // 1 ),
-        #one_time => body_parameters->get('one_time'),
-        id       => uniqid(),
-        time     => time(),
-        expires  => time() + (  body_parameters->get('expires') * 3600 ),
+        message     => body_parameters->get('save_message'),,
+        internal    => ( body_parameters->get('internal') ? 1 : 0 ),
+        read_count  => ( body_parameters->get('read_count') // 0 ),
+        read_limit  => ( body_parameters->get('read_limit') // 1 ),
+        id          => uniqid(),
+        time        => time(),
+        expires     => time() + (  body_parameters->get('expires') * 3600 ),
+        salt        => body_parameters->get('salt'),
+        hashed_salt => body_parameters->get('hashed_salt'),
     });
 
     
     $url .= $add->id;
 
-    template 'index' => { 'title' => 'Burn Note', url => $url};
+    template 'index' => { 'title' => 'Burn Note', url => $url, salt => $salt};
 };
 
 get '/:id' => sub {
@@ -47,12 +54,16 @@ get '/:id' => sub {
     $rmt_ip //= request->address;
     info "Request fror message id $id from $rmt_ip";
 
+    my $salt = uniqid();
+
     my $rec = get_rec($id);
+
 
 
     my $params = {
         title => 'Burn Note',
         id    => $id,
+        salt  => $salt,
     };
 
 
@@ -85,22 +96,59 @@ get '/:id' => sub {
     }
             
     ## If we get this far, we're displaying the message.
-    $params->{message}   = $rec->message;
+    if ( $rec->hashed_salt ) {
+        $params->{salt_record} = $rec->salt;
+        $params->{message} = q{};
+        
+        return template 'index' => $params;
+    }
+
+    $params->{message}  = $rec->message;
     my $inc = increment_read( $rec );
     if ( $rec->read_limit ) {
         $params->{remaining} = $inc->read_limit > $inc->read_count 
           ? $inc->read_limit - $inc->read_count
           : 0 ;
     }
-    template 'index' => $params;
+    return template 'index' => $params;
 
 };
+
+
+
+ajax '/:id' => sub {
+    #my $jstruct = encode_json( $struct );
+    my $id   = route_parameters->get('id');
+    my $hash = body_parameters->get('hash');
+
+    my $rec = get_rec( $id );
+
+    my $return;
+
+    if ( lc($rec->hashed_salt) eq lc($hash) ) {
+        $return = {
+            result => 'success',
+            message => $rec->message
+        };
+        my $inc = increment_read( $rec );
+    }
+    else {
+        $return = { 
+            result => 'failure'
+        };
+    }
+
+
+    return encode_json( $return );
+};
+
 
 
 sub add_message {
     my $params = shift;
     my $rs = resultset('Note');
     my $res = $rs->create( $params );
+    p $res;
     return $res;
 
 };
