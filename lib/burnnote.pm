@@ -11,8 +11,7 @@ use Template::Plugin::Lingua::EN::Inflect;
 
 our $VERSION = '0.1';
 
-info "Starting Burn Note";
-print "\nEnvironment: " . config->{environment} . "\n\n";
+info "Starting Burn Note. Environment: " . config->{environment};
 
 my $private_ip = create_iprange_regexp(
    qw( 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 )
