@@ -36,7 +36,11 @@
     <div id="header" class="page-header bg-primary">
       <div class="row" style="margin:0">
         <div id="header-left" class="col-xs-12 col-sm-2 col-md-1" style="padding-left:0">
-          <img  src="<% approot %>/images/new_logo.png"  height=78 style="margin:15px 0" />
+          <picture>
+            <source srcset="<% approot %>/images/horizontal_logo.png" media="(max-width: 767px)" >
+            <source srcset="<% approot %>/images/new_logo.png" >
+            <img  src="<% approot %>/images/horizontal_logo.png"  height=78 style="margin:10px 10px 0 10px" />
+          </picture>
         </div>
         <div id="header-text"class="col-xs-12 col-sm-10 col-md-11" style="">
           <h2><% settings.friendly_name1 %></h2>
