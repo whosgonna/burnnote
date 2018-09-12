@@ -3,7 +3,7 @@ use Modern::Perl;
 use Dancer2;
 use Dancer2::Plugin::DBIC;
 use Dancer2::Plugin::Ajax;
-use Data::Printer;
+#use Data::Printer;
 use Data::Uniqid ( 'uniqid' );
 use Net::IP::Match::Regexp qw( create_iprange_regexp match_ip );
 use Template::Plugin::Lingua::EN::Inflect;
@@ -148,7 +148,6 @@ sub add_message {
     my $params = shift;
     my $rs = resultset('Note');
     my $res = $rs->create( $params );
-    p $res;
     return $res;
 
 };
