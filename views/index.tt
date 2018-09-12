@@ -77,8 +77,9 @@
 
 
   <% IF message.defined %>
+    <div class='row'>
       <!-- <div id='encSalt' value='<% enc_salt %>'><% enc_salt %></div>  -->
-      
+      <div class='col-sm-12' >      
       <label for='message_display'>Message:</label> 
         <% IF remaining %>
           <span class='pull-right text-muted' id='msgInfo'>
@@ -96,6 +97,9 @@
             This message can be read an until <span id='until'><% expires %></span>
           </span>
         <% END %>
+      </div>
+    </div>
+
       <div class="alert alert-info" id='message_display' >
         <pre 
             style='border-style:none; background-color:inherit; margin:0px; font-size:inherit; font-family:"Lucida Console", Monaco, monospace;'
