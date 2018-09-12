@@ -109,27 +109,14 @@
           var salt = $('#salt_record').val();
 
           var data = $('#decryptMsg').serializeArray();
-          
-          console.log( 'Password is: ' + passwd );
-          console.log( 'Salt is: ' + salt );
-          console.log( 'Message Id is: ' + msgId );
-
 
           var hashed = CryptoJS.SHA256( salt + ":" + passwd);
-          console.log('sha256 = ' + hashed );
 
-          /*
-          var decSalt = CryptoJS.AES.decrypt( hashed_salt, passwd );
-                        //document.getElementById("encSalt").innerHTML = decSalt;
-                        console.log( "decSalt: " + decSalt );
-                        console.log( "decSalt.toString(CryptoJS.enc.Utf8): " + decSalt.toString(CryptoJS.enc.Utf8) );
-          */
-          
           var msgBody = {
               // There's probably a better way to get this as a string.
               hash: hashed + ''
           };
-          
+         
           var result;
           $.ajax({
               type: 'POST',
@@ -137,13 +124,12 @@
               data: msgBody,
               dataType: 'json',
               success: function( data ) {
-                  console.log("Ajax successful");
-                  console.log("Message (enc): " + data.message );
-                  console.log("Password: " + passwd);
+                  //console.log("Ajax successful");
+                  //console.log("Message (enc): " + data.message );
 
                   if ( data.result == 'success' ) {
                       var decMsg = CryptoJS.AES.decrypt( data.message, passwd).toString(CryptoJS.enc.Utf8);
-                      console.log( decMsg );
+                      //console.log( decMsg );
                       $('#message_here').html(decMsg);
                       $('#passwordModal').modal('hide');
                   }
@@ -153,8 +139,6 @@
               }
           }); /*.done( function( data ) {
               alert('data submitted');
-              // The encrypted message should be recieved, decrypted,
-              // Then the message box updated here.
           });*/
           
           console.log( result );
@@ -163,44 +147,23 @@
           
       }
       
-      //$("#decryptMsg").ajaxForm({url: 'server.php', type: 'post'});
 
       function pageLoadFunction() {
           var hashElm = document.getElementById( "password_required" );
           if ( hashElm ) {
-              console.log( "A PASSWORD IS REQUIRED HERE!" );
-              //var hashedSalt = hashElm.getAttribute( "data-hashed-salt" );
-              //var messageId  = hashElm.getAttribute( "data-message-id" );
-              
-              //console.log( "Hashed Salt: " + hashedSalt );
-              //var pass = prompt( "A password is required to view this message" );
-
-              //document.getElementById( "passwordModal" ).modal('show');
-              //$(window).on('load',function() {
-                  $('#passwordModal').modal('show');
-              //});
-
+              //console.log( "A PASSWORD IS REQUIRED HERE!" );
+              $('#passwordModal').modal('show');
           }
-          /*
-          if ( $('#encSalt')  ) {
-              var encSaltDiv    = $('#encSalt');
-              var encSaltDivVal = encSaltDiv.attr('value'); 
-              console.log(encSaltDivVal);
-              var decSalt = CryptoJS.AES.decrypt( encSaltDivVal, 'pass' );
-              //document.getElementById("encSalt").innerHTML = decSalt;
-              console.log( "decSalt: " + decSalt );
-              console.log( "decSalt.toString(CryptoJS.enc.Utf8): " + decSalt.toString(CryptoJS.enc.Utf8) );
-          }
-          */
-
       }
 
-      /*
-      $(window).on('load', function() {
-          $('#passwordModal').modal('show');
-          console.log('new stylee!');
-      });
-      */
+
+      // Convert epoch expiration time to human (browser local)
+      var expires_e = $('#until').html();
+      console.log('Expires time is: ' + expires_e);
+      var expires = new Date( expires_e * 1000 );
+      $('#until').html( expires.toLocaleString() );
+        
+
       
       
       

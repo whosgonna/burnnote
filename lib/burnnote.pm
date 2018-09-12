@@ -102,7 +102,8 @@ get '/:id' => sub {
         return template 'index' => $params;
     }
 
-    $params->{message}  = $rec->message;
+    $params->{message} = $rec->message;
+    $params->{expires} = $rec->expires;
     my $inc = increment_read( $rec );
     if ( $rec->read_limit ) {
         $params->{remaining} = $inc->read_limit > $inc->read_count 
