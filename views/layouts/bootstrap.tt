@@ -131,6 +131,10 @@
                       var decMsg = CryptoJS.AES.decrypt( data.message, passwd).toString(CryptoJS.enc.Utf8);
                       //console.log( decMsg );
                       $('#message_here').html(decMsg);
+                      var expires = new Date( data.expires * 1000 );
+                      $('#until').html( expires.toLocaleString() );
+                      $('#msgInfo').show();
+
                       $('#passwordModal').modal('hide');
                   }
                   else { 
@@ -152,6 +156,7 @@
           var hashElm = document.getElementById( "password_required" );
           if ( hashElm ) {
               //console.log( "A PASSWORD IS REQUIRED HERE!" );
+              $('#msgInfo').hide();
               $('#passwordModal').modal('show');
           }
       }
@@ -159,10 +164,11 @@
 
       // Convert epoch expiration time to human (browser local)
       var expires_e = $('#until').html();
-      console.log('Expires time is: ' + expires_e);
-      var expires = new Date( expires_e * 1000 );
-      $('#until').html( expires.toLocaleString() );
-        
+      if ( expires_e ) {
+          console.log('Expires time is: ' + expires_e);
+          var expires = new Date( expires_e * 1000 );
+          $('#until').html( expires.toLocaleString() );
+      }
 
       
       

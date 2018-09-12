@@ -127,8 +127,9 @@ ajax '/:id' => sub {
 
     if ( lc($rec->hashed_salt) eq lc($hash) ) {
         $return = {
-            result => 'success',
-            message => $rec->message
+            result  => 'success',
+            message => $rec->message,
+            expires => $rec->expires,
         };
         my $inc = increment_read( $rec );
     }

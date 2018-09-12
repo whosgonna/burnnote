@@ -81,16 +81,18 @@
       
       <label for='message_display'>Message:</label> 
         <% IF remaining %>
-          <span class='pull-right text-muted'>
+          <span class='pull-right text-muted' id='msgInfo'>
             This message can be read <% remaining %> more <% infl.PL('time', remaining) %> 
             until <span id='until'><% expires %></span>
           </span>
         <% END %>
         <% IF remaining == 0 %>
-          <span class='pull-right text-danger'>This message cannot be read again.</span>
+          <span class='pull-right text-danger' id='msgInfo'>
+            This message cannot be read again.
+          </span>
         <% END %>
         <% IF !remaining.defined %>
-          <span class='pull-right text-muted'>
+          <span class='pull-right text-muted' id='msgInfo'>
             This message can be read an until <span id='until'><% expires %></span>
           </span>
         <% END %>
