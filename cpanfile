@@ -9,3 +9,12 @@ on "test" => sub {
     requires "Test::More"            => "0";
     requires "HTTP::Request::Common" => "0";
 };
+
+requires 'Modern::Perl';
+requires 'Dancer2';
+requires 'Dancer2::Plugin::DBIC';
+requires 'Dancer2::Plugin::Ajax';
+requires 'Data::Uniqid';
+requires 'Net::IP::Match::Regexp';
+requires 'Template::Plugin::Lingua::EN::Inflect';
+~
