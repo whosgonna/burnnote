@@ -17,4 +17,3 @@ requires 'Dancer2::Plugin::Ajax';
 requires 'Data::Uniqid';
 requires 'Net::IP::Match::Regexp';
 requires 'Template::Plugin::Lingua::EN::Inflect';
-~
