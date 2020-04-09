@@ -1,4 +1,10 @@
 requires "Dancer2" => "0.205002";
+requires 'Dancer2::Plugin::DBIC';
+requires 'Dancer2::Plugin::Ajax';
+requires 'Data::Uniqid';
+requires 'Net::IP::Match::Regexp';
+requires 'HTML::Entities';
+
 
 recommends "YAML"             => "0";
 recommends "URL::Encode::XS"  => "0";

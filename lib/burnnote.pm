@@ -7,7 +7,7 @@ use Dancer2::Plugin::Ajax;
 use Data::Uniqid ( 'uniqid' );
 use Net::IP::Match::Regexp qw( create_iprange_regexp match_ip );
 use Template::Plugin::Lingua::EN::Inflect;
-
+use HTML::Entities;
 
 our $VERSION = '0.1';
 
@@ -102,7 +102,7 @@ get '/:id' => sub {
         return template 'index' => $params;
     }
 
-    $params->{message} = $rec->message;
+    $params->{message} = encode_entities( $rec->message );
     $params->{expires} = $rec->expires;
     my $inc = increment_read( $rec );
     if ( $rec->read_limit ) {
