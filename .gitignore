@@ -2,3 +2,5 @@
 config_local.*
 data/burnnote.db
 logs/*
+local/*
+
