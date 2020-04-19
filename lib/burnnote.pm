@@ -1,17 +1,39 @@
 package burnnote;
-use Modern::Perl;
+
+use strict;
+use warnings;
+
 use Dancer2;
 use Dancer2::Plugin::DBIC;
 use Dancer2::Plugin::Ajax;
-#use Data::Printer;
 use Data::Uniqid ( 'uniqid' );
 use Net::IP::Match::Regexp qw( create_iprange_regexp match_ip );
 use Template::Plugin::Lingua::EN::Inflect;
 use HTML::Entities;
+use Try::Tiny::Warnings ':all';
 
 our $VERSION = '0.1';
 
 info "Starting Burn Note. Environment: " . config->{environment};
+
+## Create the database if it does not exist.  Note that if ->deploy is not set
+## with add_drop_table, then a warning will occur when trying to create the 
+## tables.  To prevent problems here, we use `try_warnings`.  It would 
+## probably be a good idea to parse the warning so that we can ignore the
+## table already exists, but alert for any other problems
+my $add_drop_table = 0;  ## add way to set this from config.
+try_warnings {
+	schema->deploy(
+        { add_drop_table => $add_drop_table }
+    );
+}
+catch {
+    die($_);  ## if try_warnings was a fatal error, then *actually* die.
+}
+catch_warnings {
+    info "exception when deploying DB (possibly already exists, which is OK)";
+};
+
 
 my $private_ip = create_iprange_regexp(
    qw( 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 )
