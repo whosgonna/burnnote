@@ -7,8 +7,6 @@ requires 'Net::IP::Match::Regexp';
 requires 'HTML::Entities';
 requires 'Template::Plugin::Lingua::EN::Inflect';
 requires 'Try::Tiny::Warnings';
-requires 'SQL::Translator';
-requires 'SQL::SplitStatement';
 
 recommends "YAML"             => "0";
 recommends "URL::Encode::XS"  => "0";
