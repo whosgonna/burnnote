@@ -88,6 +88,7 @@ plugins:
     DBIC:
         default:
             dsn: dbi:SQLite:dbname=./data/burnnote.db
+            schema_class: Burnnote::Schema
 
 behind_proxy:  0
 
