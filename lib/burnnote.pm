@@ -16,6 +16,9 @@ our $VERSION = '0.1';
 
 info "Starting Burn Note. Environment: " . config->{environment};
 
+my $dsn = setting('plugins')->{'DBIC'}->{'default'}->{'dsn'});
+info "\n\n    DSN is $dsn\n\n";
+
 ## Create the database if it does not exist.  Note that if ->deploy is not set
 ## with add_drop_table, then a warning will occur when trying to create the 
 ## tables.  To prevent problems here, we use `try_warnings`.  It would 
