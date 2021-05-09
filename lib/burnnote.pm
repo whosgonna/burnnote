@@ -11,13 +11,27 @@ use Net::IP::Match::Regexp qw( create_iprange_regexp match_ip );
 use Template::Plugin::Lingua::EN::Inflect;
 use HTML::Entities;
 use Try::Tiny::Warnings ':all';
+use FindBin '$RealBin';
 
 our $VERSION = '0.1';
 
 info "Starting Burn Note. Environment: " . config->{environment};
+if ( $ENV{BN_DB_DSN} ) {
+    setting('plugins')->{'DBIC'}->{'default'}->{'dsn'} = $ENV{BN_DB_DSN};
+}
+else {
+    my $sqlite_dsn = "dbi:SQLite:dbname=$RealBin/../data/burnnote.db";
+    setting('plugins')->{'DBIC'}->{'default'}->{'dsn'} = $sqlite_dsn;
+}
 
-my $dsn = setting('plugins')->{'DBIC'}->{'default'}->{'dsn'});
-info "\n\n    DSN is $dsn\n\n";
+if ( $ENV{BN_DB_USER} ) {
+    setting('plugins')->{'DBIC'}->{'default'}->{'user'} = $ENV{BN_DB_USER};
+}
+
+if ( $ENV{BN_DB_PASSWORD} ) {
+    setting('plugins')->{'DBIC'}->{'default'}->{'password'} = $ENV{BN_DB_PASSWORD};
+};
+
 
 ## Create the database if it does not exist.  Note that if ->deploy is not set
 ## with add_drop_table, then a warning will occur when trying to create the 
