@@ -14,6 +14,7 @@ recommends "CGI::Deurl::XS"   => "0";
 recommends "HTTP::Parser::XS" => "0";
 
 suggests "Gazelle";
+suggests "DBD::mysql";
 
 on "test" => sub {
     requires "Test::More"            => "0";
