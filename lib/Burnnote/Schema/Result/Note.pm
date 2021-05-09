@@ -25,7 +25,7 @@ __PACKAGE__->table("notes");
 
 =head2 id
 
-  data_type: 'text'
+  data_type: 'varchar(64)'
   is_nullable: 0
 
 =head2 time
@@ -45,7 +45,7 @@ __PACKAGE__->table("notes");
 
 =head2 internal
 
-  data_type: (empty string)
+  data_type: 'tinyint'
   default_value: 1
   is_nullable: 1
 
@@ -75,7 +75,7 @@ __PACKAGE__->table("notes");
 
 __PACKAGE__->add_columns(
   "id",
-  { data_type => "text", is_nullable => 0 },
+  { data_type => "varchar(64)", is_nullable => 0 },
   "time",
   { data_type => "int", is_nullable => 0 },
   "expires",
@@ -83,7 +83,7 @@ __PACKAGE__->add_columns(
   "message",
   { data_type => "text", is_nullable => 1 },
   "internal",
-  { data_type => "", default_value => 1, is_nullable => 1 },
+  { data_type => "tinyint", default_value => 1, is_nullable => 1 },
   "read_count",
   { data_type => "int", default_value => 0, is_nullable => 1 },
   "read_limit",
